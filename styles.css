@@ -1,31 +1,41 @@
-body {
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  background: black;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+@font-face {
+  font-family: fontnew;
+  src: url(Metropolis-Regular.otf);
+}
+@font-face {
+  font-family: fontnew2;
+  src: url(BAHNSCHRIFT.TTF);
+}
+h5 {
+  font-family: fontnew;
+  letter-spacing: 26px;
+  color: aliceblue;
+  padding-top: 80px;
+}
+h1 {
+  font-family: fontnew2;
+  color: aliceblue;
 }
 canvas {
-  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: -99;
+  z-index: -9999;
 }
-.login-div {
-  max-width: 430px;
-  padding: 35px;
-  border-radius: 15px;
-  color: white;
-  background: rgba(8, 8, 8, 0.7);
-  box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.5);
+img#top-image {
+  width: 350px;
+  height: auto;
+  /* position: absolute; */
+  top: 0;
 }
-.logo {
-  background-image: url("Logo.png");
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin: 0 auto;
+
+#btn-join {
+  background: #ff147a;
+  border: none;
+  border-radius: 10px 10px;
+  font-size: 20pt;
+  margin-top: 30px;
 }

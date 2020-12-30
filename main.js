@@ -35,20 +35,66 @@ function init() {
   scene.add(blueLight);
   const geometry1 = new THREE.BoxGeometry(5.1, 6, 80);
 
-  const geometry = new THREE.RingGeometry(5.1, 6, 80, 1, 0, 3.2);
-  const geometry2 = new THREE.RingGeometry(5.1, 6, 80, 1, 4, 2);
-  const material = new THREE.MeshBasicMaterial({ color: 0xff012f });
+  const geometry = new THREE.RingGeometry(5.9, 7, 80, 1, 0, 3.2);
+  const geometry2 = new THREE.RingGeometry(5.9, 7, 80, 1, 4, 2);
+  // const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+  let viewVector = new THREE.Vector3().subVectors(
+    camera.position,
+    object.glow.getWorldPosition()
+  );
+  object.glow.material.uniforms.viewVector.value = viewVector;
+  var material = new THREE.ShaderMaterial({
+    uniforms: {
+      color1: {
+        value: new THREE.Color(0xff00f5),
+      },
+      color2: {
+        value: new THREE.Color(0xff0000),
+      },
+    },
+    vertexShader: `
+            varying vec2 vUv;
+
+            uniform vec3 viewVector;
+            varying float intensity;
+
+            void main() {
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+
+              gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 );
+              vec3 actual_normal = vec3(modelMatrix * vec4(normal, 0.0));
+              intensity = pow( dot(normalize(viewVector), actual_normal), 6.0 );
+            }
+          `,
+    fragmentShader: `
+            uniform vec3 color1;
+            uniform vec3 color2;
+
+            varying float intensity;
+          
+            varying vec2 vUv;
+            
+            void main() {
+              vec3 glow = vec3(0, 1, 0) * intensity;
+              gl_FragColor = vec4( glow, 1.0 );
+              
+              gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
+            }
+          `,
+    wireframe: false,
+  });
   circle = new THREE.Mesh(geometry, material);
   circle2 = new THREE.Mesh(geometry2, material);
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  scene.fog = new THREE.FogExp2(0x000018, 0.001);
+  scene.fog = new THREE.FogExp2(0x1c1445, 0.001);
   renderer.setClearColor(scene.fog.color);
   document.body.appendChild(renderer.domElement);
 
   let loader = new THREE.TextureLoader();
-  loader.load("src/smoke.png", function (texture) {
+  loader.load("smoke.png", function (texture) {
     cloudGeo = new THREE.PlaneBufferGeometry(200, 100);
     cloudMaterial = new THREE.MeshLambertMaterial({
       map: texture,
@@ -70,7 +116,7 @@ function init() {
       scene.add(cloud);
     }
   });
-  loader.load("src/stars.jpg", function (texture) {
+  loader.load("stars.jpg", function (texture) {
     const textureEffect = new POSTPROCESSING.TextureEffect({
       blendFunction: POSTPROCESSING.BlendFunction.COLOR_DODGE,
       texture: texture,
