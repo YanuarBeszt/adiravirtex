@@ -1,6 +1,8 @@
 let scene,
   camera,
   circle,
+  circle2,
+  circ,
   cloudParticles = [],
   composer;
 
@@ -38,11 +40,6 @@ function init() {
   const geometry = new THREE.RingGeometry(5.9, 7, 80, 1, 0, 3.2);
   const geometry2 = new THREE.RingGeometry(5.9, 7, 80, 1, 4, 2);
   // const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-  let viewVector = new THREE.Vector3().subVectors(
-    camera.position,
-    object.glow.getWorldPosition()
-  );
-  object.glow.material.uniforms.viewVector.value = viewVector;
   var material = new THREE.ShaderMaterial({
     uniforms: {
       color1: {
@@ -53,45 +50,87 @@ function init() {
       },
     },
     vertexShader: `
-            varying vec2 vUv;
+          varying vec2 vUv;
 
-            uniform vec3 viewVector;
-            varying float intensity;
-
-            void main() {
-              vUv = uv;
-              gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-
-              gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 );
-              vec3 actual_normal = vec3(modelMatrix * vec4(normal, 0.0));
-              intensity = pow( dot(normalize(viewVector), actual_normal), 6.0 );
-            }
-          `,
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+          }
+        `,
     fragmentShader: `
-            uniform vec3 color1;
-            uniform vec3 color2;
-
-            varying float intensity;
+          uniform vec3 color1;
+          uniform vec3 color2;
+        
+          varying vec2 vUv;
           
-            varying vec2 vUv;
-            
-            void main() {
-              vec3 glow = vec3(0, 1, 0) * intensity;
-              gl_FragColor = vec4( glow, 1.0 );
-              
-              gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
-            }
-          `,
+          void main() {
+            gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
+          }
+        `,
     wireframe: false,
   });
   circle = new THREE.Mesh(geometry, material);
   circle2 = new THREE.Mesh(geometry2, material);
+
+  scene.add(circle);
+  scene.add(circle2);
+  circle2.position.set(0, -0.2, 80);
+  circle.position.set(0, -0.2, 80);
+
+  var customMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      c: { type: "f", value: 1.0 },
+      p: { type: "f", value: 1.4 },
+      glowColor: { type: "c", value: new THREE.Color(0xff0000) },
+      viewVector: { type: "v3", value: camera.position },
+    },
+    vertexShader: document.getElementById("vertexShader").textContent,
+    fragmentShader: document.getElementById("fragmentShader").textContent,
+    side: THREE.FrontSide,
+    blending: THREE.AdditiveBlending,
+    transparent: true,
+  });
+  this.circleGlow = new THREE.Mesh(geometry.clone(), customMaterial.clone());
+  circleGlow.position = circle.position;
+  circleGlow.scale.multiplyScalar(1.2);
+  scene.add(circleGlow);
+
+  this.circle2Glow = new THREE.Mesh(geometry2.clone(), customMaterial.clone());
+  circle2Glow.position = circle.position;
+  circle2Glow.scale.multiplyScalar(1.2);
+  scene.add(circle2Glow);
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   scene.fog = new THREE.FogExp2(0x1c1445, 0.001);
   renderer.setClearColor(scene.fog.color);
   document.body.appendChild(renderer.domElement);
+
+  var dashMaterial = new THREE.LineDashedMaterial({
+    color: 0xff0000,
+    linewidth: 1,
+    scale: 1,
+    dashSize: 3,
+    gapSize: 1,
+    transparent: true,
+    opacity: 0.4,
+  });
+  var lineMaterial = new THREE.LineBasicMaterial({
+    color: 0xff1493,
+    linewidth: 1,
+    transparent: true,
+    opacity: 0.4,
+  });
+  circGeom = new THREE.CircleGeometry(60, 100);
+  circGeom2 = new THREE.CircleGeometry(92, 1000);
+
+  circGeom.vertices.shift();
+  circGeom2.vertices.shift();
+
+  var circ2 = new THREE.Line(circGeom2, lineMaterial);
+  scene.add(circ2);
+  var circ = new THREE.LineSegments(circGeom, dashMaterial);
+  scene.add(circ);
 
   let loader = new THREE.TextureLoader();
   loader.load("smoke.png", function (texture) {
@@ -146,22 +185,27 @@ function init() {
     window.addEventListener("resize", onWindowResize, false);
     render();
   });
-
-  scene.add(circle);
-  scene.add(circle2);
-  circle2.position.set(0, 0, 80);
-  circle.position.set(0, 0, 80);
 }
 
 function animate() {
   requestAnimationFrame(animate);
 
-  // Rotate circle (Change values to change speed)
+  // circGeom.rotation.x += 0.001;
   circle.rotation.z += 0.001;
   circle2.rotation.z += 0.001;
-  //   circle.rotation.y += 0.01;
-
+  update();
   renderer.render(scene, camera);
+}
+
+function update() {
+  circleGlow.material.uniforms.viewVector.value = new THREE.Vector3().subVectors(
+    camera.position,
+    circleGlow.position
+  );
+  circle2Glow.material.uniforms.viewVector.value = new THREE.Vector3().subVectors(
+    camera.position,
+    circle2Glow.position
+  );
 }
 
 function onWindowResize() {

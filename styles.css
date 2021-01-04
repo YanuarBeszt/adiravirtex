@@ -1,3 +1,10 @@
+html,
+body,
+.enter-expo {
+  min-height: 100% !important;
+  height: 100%;
+}
+
 @font-face {
   font-family: fontnew;
   src: url(Metropolis-Regular.otf);
@@ -10,7 +17,7 @@ h5 {
   font-family: fontnew;
   letter-spacing: 26px;
   color: aliceblue;
-  padding-top: 80px;
+  padding-top: 60px;
 }
 h1 {
   font-family: fontnew2;
@@ -35,7 +42,223 @@ img#top-image {
 #btn-join {
   background: #ff147a;
   border: none;
-  border-radius: 10px 10px;
+  border-radius: 10px;
   font-size: 20pt;
+  margin-top: 10px;
+}
+
+#btn-login {
+  background: #ff147a;
+  width: fit-content;
+  height: auto;
+  border: none;
+  border-radius: 10px;
+  font-size: 8pt;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin: 0 auto;
+  display: block;
+}
+
+#enterExpo {
+  background: #ff147a;
+  width: fit-content;
+  height: auto;
+  border: none;
+  border-radius: 10px;
+  font-size: 8pt;
+  margin-top: 10px;
+  margin-bottom: 10px !important;
+  margin: 0 auto;
+  display: block;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.splash-enter {
+  display: none;
+}
+
+.modal {
+  height: 100% !important ;
+  width: 75% !important ;
+}
+
+input {
+  border-bottom: none !important;
+}
+
+.input-group {
+  padding: 0;
+  display: block;
+  width: 441px;
+  max-width: 100%;
+  height: 82px;
+  border: 0;
+  background-color: #ffffff;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  box-shadow: 0 17px 40px 0 rgba(75, 128, 182, 0.07);
+  margin-bottom: 0px;
+  position: relative;
+  font-size: 17px;
+  color: #a7b4c1;
+  transition: opacity 0.2s ease-in-out, filter 0.2s ease-in-out,
+    box-shadow 0.1s ease-in-out;
+}
+
+.input-group:hover {
+  box-shadow: 0 14px 44px 0 rgba(0, 0, 0, 0.077);
+}
+
+.input-group input {
+  position: absolute;
+  border: 0;
+  box-shadow: none;
+  background-color: rgba(255, 255, 255, 0);
+  top: 0;
+  height: 20px;
+  width: 90% !important;
+  padding: 0 20px;
+  padding-left: 35px !important;
+  box-sizing: border-box;
+  z-index: 3;
+  display: block;
+  color: #7c7c7c;
+  font-size: 17px;
+  font-family: "Oxygen", sans-serif;
+  transition: top 0.1s ease-in-out;
+}
+
+.input-group input::placeholder {
+  color: rgba(0, 0, 0, 0);
+}
+
+.input-group input:focus,
+.input-group input:not(:placeholder-shown) {
+  top: 25px;
+}
+
+.input-group label {
+  position: absolute;
+  border: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  padding: 0 53px;
+  box-sizing: border-box;
+  transition: all 0.1s ease-in-out;
+  cursor: text;
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  bottom: 40px;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+input[type="text"]:focus:not([readonly]) {
+  box-shadow: none !important;
+  border-bottom: none !important;
+}
+
+input[type="password"]:focus:not([readonly]) {
+  box-shadow: none !important;
+  border-bottom: none !important;
+}
+
+input[type="email"]:focus:not([readonly]) {
+  box-shadow: none !important;
+  border-bottom: none !important;
+}
+section {
+  width: 100%;
+}
+
+.half-modal {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-left {
+  background-color: #1e1847;
+  float: left;
+  width: 35%;
+  height: 600px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.modal-left ul {
+  float: right;
+  height: 100%;
+  top: 50%;
+}
+
+ul.login-nav li button {
+  padding: 0;
+  margin: 0;
+  width: 170px;
+  height: 55px;
+  border-bottom-left-radius: 40px;
+  border-top-left-radius: 40px;
+  border: none;
+  background-color: transparent;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+ul.login-nav li button:focus {
+  background-color: white;
+  color: #1e1847;
+}
+
+.modal-right {
+  background-color: #ffffff;
+  float: left;
+  width: 65%;
+  height: 600px;
+  margin: 0px;
+  padding-left: 70px;
+  padding-right: 70px;
+  padding-top: 30px;
+  padding-bottom: 50px;
+}
+.forget-password {
+  font-size: smaller;
+  float: right;
+}
+.modal {
+  border-radius: 10px !important;
+}
+
+.enter-expo {
+  height: 100% !important;
+  z-index: 100;
+  margin: 0;
+  padding: 0;
+  background-color: rgba(30, 24, 27, 0.5);
+}
+.content p {
+  color: white;
+  text-align: left;
+  font-size: 9pt;
+  margin-left: 280px;
   margin-top: 30px;
+}
+.content {
+  margin: 0 auto;
+  display: block;
+}
+
+h6 {
+  font-size: 16pt !important;
 }
